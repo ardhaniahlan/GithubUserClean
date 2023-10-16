@@ -40,7 +40,8 @@
         android:src="@drawable/ic_favorite_border"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/fab" />
 
     <TextView
         android:id="@+id/link"

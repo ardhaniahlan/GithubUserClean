@@ -2,10 +2,11 @@ package org.apps.favorite
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.apps.githubuser.databinding.ActivityFavoriteBinding
 import org.apps.core.adapter.UserAdapter
-import org.apps.githubuser.databinding.ActivityFavoriteBinding
 import org.apps.githubuser.ui.detail.DetailActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.context.loadKoinModules

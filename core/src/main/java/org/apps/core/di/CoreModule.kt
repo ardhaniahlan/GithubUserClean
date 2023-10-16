@@ -3,6 +3,7 @@ package org.apps.core.di
 import androidx.room.Room
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
+import okhttp3.CertificatePinner
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -32,12 +33,21 @@ class AuthInterceptor(private val token: String) : Interceptor {
 
 val networkModule = module {
     single {
-        val token = "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"
+        val token = "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"
+
+        val hostname = "api.github.com"
+        val certificatePinner = CertificatePinner.Builder()
+            .add(hostname, "sha256/Jg78dOE+fydIGk19swWwiypUSR6HWZybfnJG/8G7pyM=")
+            .add(hostname, "sha256/e0IRz5Tio3GA1Xs4fUVWmH1xHDiH2dMbVtCBSkOIdqM=")
+            .add(hostname, "sha256/r/mIkG3eEpVdm+u/ko/cwxzOMo1bk4TyHIlByibiA5E=")
+            .build()
+
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .addInterceptor(AuthInterceptor(token))
             .connectTimeout(120, TimeUnit.SECONDS)
             .readTimeout(120, TimeUnit.SECONDS)
+            .certificatePinner(certificatePinner)
             .build()
     }
     single {
@@ -53,10 +63,15 @@ val networkModule = module {
 val databaseModule = module {
     factory { get<UserDatabase>().userDao() }
     single {
+        val passphrase: ByteArray = SQLiteDatabase.getBytes("githubuser".toCharArray())
+        val factory = SupportFactory(passphrase)
         Room.databaseBuilder(
             androidContext(),
-            UserDatabase::class.java, "user.db"
-        ).fallbackToDestructiveMigration().build()
+            UserDatabase::class.java,
+            "user"
+        ).openHelperFactory(factory)
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }
 

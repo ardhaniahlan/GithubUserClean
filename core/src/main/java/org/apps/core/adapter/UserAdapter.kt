@@ -12,7 +12,7 @@ import org.apps.core.R
 import org.apps.core.domain.User
 import java.util.ArrayList
 
-class UserAdapter: RecyclerView.Adapter<org.apps.core.adapter.UserAdapter.ViewHolder>() {
+class UserAdapter: RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
         val avatarUrl: ImageView = itemView.findViewById(R.id.img_user)
@@ -22,6 +22,7 @@ class UserAdapter: RecyclerView.Adapter<org.apps.core.adapter.UserAdapter.ViewHo
     private var users = ArrayList<User>()
     var onItemClick: ((User) -> Unit)? = null
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(newListData: List<User>?) {
         if (newListData == null) return
         users.clear()

@@ -13,38 +13,38 @@ import org.apps.core.utils.DataMapper
 
 
 class UserRepository (
-        private val remoteDataSource: RemoteDataSource,
-        private val localDataSource: LocalDataSource,
-        private val appExecutors: AppExecutors
-        ) : IUserRepository {
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+    private val appExecutors: AppExecutors
+) : IUserRepository {
 
-        override fun getAllUser(): Flow<Resource<List<User>>> =
-                object : NetworkBoundResource<List<User>, List<UserResponse>>() {
-                        override fun loadFromDB(): Flow<List<User>> {
-                                return localDataSource.getAllUser().map {
-                                        DataMapper.mapEntitiesToDomain(it)
-                                }
-                        }
-
-                        override fun shouldFetch(data: List<User>?): Boolean = true
-
-                        override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
-                                remoteDataSource.getAllUser()
-
-                        override suspend fun saveCallResult(data: List<UserResponse>) {
-                                val userList = DataMapper.mapResponsesToEntities(data)
-                                localDataSource.insertUser(userList)
-                        }
-                }.asFlow()
-
-        override fun getFavoriteUser(): Flow<List<User>> {
-                return localDataSource.getFavoriteUser().map {
-                        DataMapper.mapEntitiesToDomain(it)
+    override fun getAllUser(): Flow<Resource<List<User>>> =
+        object : NetworkBoundResource<List<User>, List<UserResponse>>() {
+            override fun loadFromDB(): Flow<List<User>> {
+                return localDataSource.getAllUser().map {
+                    DataMapper.mapEntitiesToDomain(it)
                 }
-        }
+            }
 
-        override fun setFavoriteUser(user: User, state: Boolean) {
-                val userEntity = DataMapper.mapDomainToEntities(user)
-                appExecutors.diskIO().execute { localDataSource.setFavoriteUser(userEntity, state) }
+            override fun shouldFetch(data: List<User>?): Boolean =  data.isNullOrEmpty()
+
+            override suspend fun createCall(): Flow<ApiResponse<List<UserResponse>>> =
+                remoteDataSource.getAllUser()
+
+            override suspend fun saveCallResult(data: List<UserResponse>) {
+                val userList = DataMapper.mapResponsesToEntities(data)
+                localDataSource.insertUser(userList)
+            }
+        }.asFlow()
+
+    override fun getFavoriteUser(): Flow<List<User>> {
+        return localDataSource.getFavoriteUser().map {
+            DataMapper.mapEntitiesToDomain(it)
         }
+    }
+
+    override fun setFavoriteUser(user: User, state: Boolean) {
+        val userEntity = DataMapper.mapDomainToEntities(user)
+        appExecutors.diskIO().execute { localDataSource.setFavoriteUser(userEntity, state) }
+    }
 }

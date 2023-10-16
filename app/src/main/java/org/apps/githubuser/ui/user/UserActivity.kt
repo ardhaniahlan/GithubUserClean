@@ -2,15 +2,16 @@ package org.apps.githubuser.ui.user
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.apps.githubuser.R
+import com.apps.githubuser.databinding.ActivityUserBinding
 import org.apps.core.data.Resource
-import org.apps.githubuser.R
-import org.apps.githubuser.databinding.ActivityUserBinding
 import org.apps.githubuser.ui.detail.DetailActivity
 import org.apps.githubuser.ui.setting.SettingActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,6 +46,7 @@ class UserActivity : AppCompatActivity() {
 
                     is Resource.Error -> {
                         binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this,"Data Kosong",Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -3,12 +3,13 @@ package org.apps.githubuser.ui.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import com.apps.githubuser.R
+import com.apps.githubuser.databinding.ActivityDetailBinding
 import com.bumptech.glide.Glide
 import org.apps.core.domain.User
-import org.apps.githubuser.R
-import org.apps.githubuser.databinding.ActivityDetailBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailActivity : AppCompatActivity() {
@@ -26,7 +27,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = "Detail User"
+        supportActionBar?.title = getString(R.string.detail_user)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val detailUser = intent.getParcelableExtra<User>(EXTRA_DATA)

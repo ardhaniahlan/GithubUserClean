@@ -33,7 +33,7 @@ class AuthInterceptor(private val token: String) : Interceptor {
 
 val networkModule = module {
     single {
-        val token = "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"
+        val token = "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"
 
         val hostname = "api.github.com"
         val certificatePinner = CertificatePinner.Builder()
